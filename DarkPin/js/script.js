@@ -21,6 +21,17 @@ const dropdownMenu = document.getElementById('dropdown-menu');
 const addAccountBtn = document.getElementById('add-account-btn');
 const logoutBtn = document.getElementById('logout-btn');
 
+const createBtn = document.getElementById('create-btn');
+const createPanel = document.getElementById('create-panel');
+const notificationsBtn = document.getElementById('notifications-btn');
+const notificationsPanel = document.getElementById('notifications-panel');
+const messagesBtn = document.getElementById('messages-btn');
+const messagesPanel = document.getElementById('messages-panel');
+const settingsBtn = document.getElementById('settings-btn');
+const settingsPanel = document.getElementById('settings-panel');
+const closePanelBtns = document.querySelectorAll('[data-close-panel]');
+const createOptions = document.querySelectorAll('.create-option');
+
 let pins = [];
 
 function loadPins() {
@@ -29,30 +40,10 @@ function loadPins() {
         pins = JSON.parse(stored);
     } else {
         pins = [
-            {
-                id: Date.now() + 1,
-                title: 'Атмосферный вечер',
-                imageUrl: 'https://i.pinimg.com/736x/dc/2c/99/dc2c9981b8d41a3722f2b88cf11943e0.jpg',
-                likes: 18
-            },
-            {
-                id: Date.now() + 2,
-                title: 'Новый пин',
-                imageUrl: 'https://i.pinimg.com/736x/d8/25/4d/d8254d6822ae345353484844fa9e1074.jpg',
-                likes: 0
-            },
-            {
-                id: Date.now() + 3,
-                title: 'Уют и стиль',
-                imageUrl: 'https://i.pinimg.com/736x/09/df/9d/09df9d4d126daf2f7f2bf3931ce27795.jpg',
-                likes: 31
-            },
-            {
-                id: Date.now() + 4,
-                title: 'Вдохновение',
-                imageUrl: 'https://i.pinimg.com/736x/ba/ae/bd/baaebd3b74578854e187dd14ba699c8a.jpg',
-                likes: 15
-            }
+            { id: Date.now() + 1, title: 'Атмосферный вечер', imageUrl: 'https://i.pinimg.com/736x/dc/2c/99/dc2c9981b8d41a3722f2b88cf11943e0.jpg', likes: 18 },
+            { id: Date.now() + 2, title: 'Новый пин', imageUrl: 'https://i.pinimg.com/736x/d8/25/4d/d8254d6822ae345353484844fa9e1074.jpg', likes: 0 },
+            { id: Date.now() + 3, title: 'Уют и стиль', imageUrl: 'https://i.pinimg.com/736x/09/df/9d/09df9d4d126daf2f7f2bf3931ce27795.jpg', likes: 31 },
+            { id: Date.now() + 4, title: 'Вдохновение', imageUrl: 'https://i.pinimg.com/736x/ba/ae/bd/baaebd3b74578854e187dd14ba699c8a.jpg', likes: 15 }
         ];
         savePins();
     }
@@ -65,13 +56,9 @@ function savePins() {
 
 function renderPins(container, filter = '') {
     container.innerHTML = '';
-    const filtered = pins.filter(pin => 
-        pin.title.toLowerCase().includes(filter.toLowerCase())
-    );
-
+    const filtered = pins.filter(pin => pin.title.toLowerCase().includes(filter.toLowerCase()));
     filtered.forEach(pin => {
-        const card = createPinCard(pin);
-        container.appendChild(card);
+        container.appendChild(createPinCard(pin));
     });
 }
 
@@ -100,7 +87,6 @@ function createPinCard(pin) {
     const likeBtn = document.createElement('button');
     likeBtn.className = 'like-btn';
     likeBtn.innerHTML = '❤️';
-    likeBtn.setAttribute('aria-label', 'Нравится');
     likeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         pin.likes++;
@@ -117,7 +103,6 @@ function createPinCard(pin) {
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn-pin';
     deleteBtn.innerHTML = '🗑️';
-    deleteBtn.setAttribute('aria-label', 'Удалить');
     deleteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         pins = pins.filter(p => p.id !== pin.id);
@@ -128,7 +113,6 @@ function createPinCard(pin) {
 
     info.appendChild(actions);
     card.appendChild(info);
-
     return card;
 }
 
@@ -149,7 +133,9 @@ function showProfile() {
     homeBtn.classList.remove('active');
     profileBtn.classList.add('active');
     const tabPins = document.getElementById('tab-pins');
-    renderPins(tabPins);
+    if (tabPins.children.length === 0) {
+        renderPins(tabPins);
+    }
 }
 
 function showHome() {
@@ -166,48 +152,102 @@ function goHome() {
 }
 
 function switchProfileTab(tabName) {
-    profileTabs.forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.tab === tabName);
-    });
-    profileTabContents.forEach(content => {
-        content.classList.add('hidden');
-    });
+    profileTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === tabName));
+    profileTabContents.forEach(content => content.classList.add('hidden'));
     document.getElementById(`tab-${tabName}`).classList.remove('hidden');
 }
 
-// Выпадающее меню
 let menuVisible = false;
-
 function toggleMenu() {
     menuVisible = !menuVisible;
     dropdownMenu.classList.toggle('visible', menuVisible);
 }
-
 profileAvatar.addEventListener('click', (e) => {
     e.stopPropagation();
     toggleMenu();
 });
-
 document.addEventListener('click', () => {
     if (menuVisible) {
         menuVisible = false;
         dropdownMenu.classList.remove('visible');
     }
 });
-
 addAccountBtn.addEventListener('click', () => {
     alert('Функция добавления аккаунта (заглушка)');
     dropdownMenu.classList.remove('visible');
-    menuVisible = false;
 });
-
 logoutBtn.addEventListener('click', () => {
     alert('Вы вышли (заглушка)');
     dropdownMenu.classList.remove('visible');
-    menuVisible = false;
 });
 
-// Основные события
+const panels = {
+    create: createPanel,
+    notifications: notificationsPanel,
+    messages: messagesPanel,
+    settings: settingsPanel
+};
+
+function closeAllPanels() {
+    Object.values(panels).forEach(panel => {
+        panel.classList.add('hidden');
+        panel.classList.remove('visible');
+    });
+}
+
+function openPanel(panelName) {
+    closeAllPanels();
+    const panel = panels[panelName];
+    panel.classList.remove('hidden');
+    panel.classList.add('visible');
+}
+
+createBtn.addEventListener('click', () => {
+    if (createPanel.classList.contains('visible')) {
+        closeAllPanels();
+    } else {
+        openPanel('create');
+    }
+});
+
+notificationsBtn.addEventListener('click', () => {
+    if (notificationsPanel.classList.contains('visible')) {
+        closeAllPanels();
+    } else {
+        openPanel('notifications');
+    }
+});
+
+messagesBtn.addEventListener('click', () => {
+    if (messagesPanel.classList.contains('visible')) {
+        closeAllPanels();
+    } else {
+        openPanel('messages');
+    }
+});
+
+settingsBtn.addEventListener('click', () => {
+    if (settingsPanel.classList.contains('visible')) {
+        closeAllPanels();
+    } else {
+        openPanel('settings');
+    }
+});
+
+closePanelBtns.forEach(btn => btn.addEventListener('click', closeAllPanels));
+
+createOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        const type = option.getAttribute('data-create-type');
+        if (type === 'pin') {
+            openModal();
+        } else {
+            alert(`Функция "${type}" в разработке`);
+        }
+        closeAllPanels();
+    });
+});
+
 addPinBtn.addEventListener('click', openModal);
 closeModalBtn.addEventListener('click', closeModal);
 addPinModal.addEventListener('click', (e) => {
@@ -218,21 +258,14 @@ savePinBtn.addEventListener('click', () => {
     const title = pinTitleInput.value.trim() || 'Без названия';
     const imageUrl = pinImageUrlInput.value.trim();
     const file = pinImageFileInput.files[0];
-
     if (!imageUrl && !file) {
         alert('Укажите ссылку на изображение или выберите файл');
         return;
     }
-
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const newPin = {
-                id: Date.now(),
-                title: title,
-                imageUrl: e.target.result,
-                likes: 0
-            };
+            const newPin = { id: Date.now(), title, imageUrl: e.target.result, likes: 0 };
             pins.push(newPin);
             savePins();
             renderPins(pinsGrid, searchInput.value);
@@ -240,12 +273,7 @@ savePinBtn.addEventListener('click', () => {
         };
         reader.readAsDataURL(file);
     } else {
-        const newPin = {
-            id: Date.now(),
-            title: title,
-            imageUrl: imageUrl,
-            likes: 0
-        };
+        const newPin = { id: Date.now(), title, imageUrl, likes: 0 };
         pins.push(newPin);
         savePins();
         renderPins(pinsGrid, searchInput.value);
@@ -266,9 +294,7 @@ shareProfileBtn.addEventListener('click', () => alert('Ссылка скопир
 createPinBtnProfile.addEventListener('click', openModal);
 
 profileTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        switchProfileTab(tab.dataset.tab);
-    });
+    tab.addEventListener('click', () => switchProfileTab(tab.dataset.tab));
 });
 
 loadPins();

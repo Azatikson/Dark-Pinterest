@@ -10,6 +10,7 @@
     --shadow: 0 4px 12px rgba(0,0,0,0.4);
     --radius: 12px;
     --sidebar-width: 80px;
+    --side-panel-width: 320px;
     --pin-radius: 10px;
     --nav-btn-size: 48px;
 }
@@ -42,6 +43,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+    flex-shrink: 0;
 }
 
 .logo {
@@ -100,6 +102,100 @@ body {
 .nav-btn.active:hover {
     background-color: rgba(255, 255, 255, 0.12);
     color: var(--accent);
+}
+
+.side-panel {
+    width: 0;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    transition: none;
+    padding: 0;
+}
+
+.side-panel.visible {
+    width: var(--side-panel-width);
+    padding: 20px;
+}
+
+.side-panel.hidden {
+    width: 0;
+    padding: 0;
+}
+
+.side-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    min-width: var(--side-panel-width);
+}
+
+.side-panel-header h3 {
+    font-size: 1.4em;
+    margin: 0;
+}
+
+.close-panel-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.panel-placeholder {
+    min-width: var(--side-panel-width);
+    opacity: 0.8;
+}
+
+.create-option {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 10px;
+    min-width: calc(var(--side-panel-width) - 40px);
+}
+
+.create-option:hover {
+    background-color: rgba(255,255,255,0.05);
+}
+
+.create-icon {
+    font-size: 1.8em;
+}
+
+.create-text h4 {
+    font-size: 1.1em;
+    margin: 0 0 5px;
+}
+
+.create-text p {
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.settings-option {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.settings-option:hover {
+    background-color: rgba(255,255,255,0.05);
 }
 
 .main-content {
