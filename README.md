@@ -33,3 +33,5 @@ DarkPin - это пет-проект, вдохновлённый Pinterest, но
 - Комментарии
 - Сохранение в коллекции
 - Регистрация/авторизация
+
+https://github.com/user-attachments/assets/0519bb37-77dc-48ef-8d92-b0562afe635b
