@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/0519bb37-77dc-48ef-8d92-b0562afe635b
 ## Запуск
 
 1. Склонируйте репозиторий:
-   git clone https://github.com/ТВОЙ_ЛОГИН/darkpin.git
+   git clone https://github.com/azatikson/darkpin.git
 
 2. Откройте `html/index.html` через Live Server или в браузере.
 
